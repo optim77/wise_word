@@ -1,12 +1,13 @@
 import { DarkTheme, DefaultTheme, ThemeProvider } from '@react-navigation/native';
 import { useFonts } from 'expo-font';
-import { Stack, router } from 'expo-router';
+import { Stack } from 'expo-router';
 import { StatusBar } from 'expo-status-bar';
 import 'react-native-reanimated';
+
 import { useColorScheme } from '@/hooks/useColorScheme';
 import { useEffect, useState } from "react";
 import { supabase } from "@/hooks/supabaseClient";
-import { View, ActivityIndicator, StyleSheet } from "react-native";
+import { View, ActivityIndicator } from "react-native";
 
 export default function RootLayout() {
     const colorScheme = useColorScheme();
@@ -14,36 +15,38 @@ export default function RootLayout() {
         SpaceMono: require('../assets/fonts/SpaceMono-Regular.ttf'),
     });
 
-    const [loadingUser, setLoadingUser] = useState(true);
-    const [user, setUser] = useState<any>(null);
+    const [loading, setLoading] = useState(true);
+    const [user, setUser] = useState(null);
+
     useEffect(() => {
-        const checkUser = async () => {
+        const initAuth = async () => {
             try {
-                const { data, error } = await supabase.auth.getUser();
-                if (error) throw error;
-                setUser(data?.user ?? null);
-                setLoadingUser(false);
-                if (!data?.user) router.replace("/sign-in");
-            } catch (err) {
-                console.error("Auth error:", err);
-                setUser(null);
-                setLoadingUser(false);
-                router.replace("/sign-in");
+                const { data: { session }, error } = await supabase.auth.getSession();
+
+                if (error) {
+                    console.error("Auth error:", error);
+                }
+
+                setUser(session?.user ?? null);
+            } catch (e) {
+                console.error("Unexpected auth error:", e);
+            } finally {
+                setLoading(false);
             }
         };
-        checkUser();
 
-        const { data: listener } = supabase.auth.onAuthStateChange((event, session) => {
+        initAuth();
+
+        const { data: subscription } = supabase.auth.onAuthStateChange((_event, session) => {
             setUser(session?.user ?? null);
-            if (!session?.user) router.replace("/sign-in");
         });
 
-        return () => listener.subscription.unsubscribe();
+        return () => subscription.subscription.unsubscribe();
     }, []);
 
-    if (!loaded || loadingUser) {
+    if (!loaded || loading) {
         return (
-            <View style={styles.center}>
+            <View style={{ flex: 1, justifyContent: "center", alignItems: "center" }}>
                 <ActivityIndicator size="large" />
             </View>
         );
@@ -52,14 +55,14 @@ export default function RootLayout() {
     return (
         <ThemeProvider value={colorScheme === 'light' ? DarkTheme : DefaultTheme}>
             <Stack>
-                <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
+                {user ? (
+                    <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
+                ) : (
+                    <Stack.Screen name="sign-in" options={{ headerShown: false }} />
+                )}
                 <Stack.Screen name="+not-found" />
             </Stack>
             <StatusBar style="auto" />
         </ThemeProvider>
     );
 }
-
-const styles = StyleSheet.create({
-    center: { flex: 1, justifyContent: "center", alignItems: "center" },
-});

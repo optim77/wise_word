@@ -21,7 +21,7 @@ export default function SignUp() {
 
     return (
         <View style={styles.container}>
-            <Text style={styles.title}>Zarejestruj się</Text>
+            <Text style={styles.title}>Sign up</Text>
             <Card style={styles.card}>
                 <TextInput
                     placeholder="Email"
@@ -32,14 +32,14 @@ export default function SignUp() {
                     autoCapitalize="none"
                 />
                 <TextInput
-                    placeholder="Hasło"
+                    placeholder="Password"
                     value={password}
                     onChangeText={setPassword}
                     secureTextEntry
                     style={styles.input}
                 />
                 <TouchableOpacity style={styles.button} onPress={handleSignUp} disabled={loading}>
-                    <Text style={styles.buttonText}>{loading ? "Ładowanie..." : "Zarejestruj się"}</Text>
+                    <Text style={styles.buttonText}>{loading ? "Loading..." : "Sign up"}</Text>
                 </TouchableOpacity>
                 <TouchableOpacity
                     style={[styles.button, styles.googleButton]}
@@ -47,6 +47,13 @@ export default function SignUp() {
                 >
                     <Text style={styles.buttonText}>Zaloguj się przez Google</Text>
                 </TouchableOpacity>
+
+                <Text>
+                    Do you already have an account?{" "}
+                    <Text style={{ color: "blue" }} onPress={() => router.push("/sign-in")}>
+                        Sing in
+                    </Text>
+                </Text>
             </Card>
         </View>
     );
