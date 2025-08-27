@@ -12,9 +12,20 @@
       "visible": "sticky-immersive"
     },
     "ios": {
-      "supportsTablet": true
+      "bundleIdentifier": "com.optim.wiseword",
+      "supportsTablet": true,
+      "infoPlist": {
+        "CFBundleURLTypes": [
+          {
+            "CFBundleURLSchemes": [
+              "com.googleusercontent.apps.7xxxxxxx"
+            ]
+          }
+        ]
+      }
     },
     "android": {
+      "package": "com.optim.wiseword",
       "adaptiveIcon": {
         "foregroundImage": "./assets/images/adaptive-icon.png",
         "backgroundColor": "#ffffff"
@@ -36,7 +47,8 @@
           "resizeMode": "contain",
           "backgroundColor": "#ffffff"
         }
-      ]
+      ],
+      "expo-web-browser"
     ],
     "experiments": {
       "typedRoutes": true

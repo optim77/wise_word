@@ -3,6 +3,7 @@ import { View, Text, TextInput, TouchableOpacity, StyleSheet, Alert } from "reac
 import { supabase } from "@/hooks/supabaseClient";
 import { useRouter } from "expo-router";
 import { Card } from "@/components/Card";
+import GoogleSignInButton from "@/components/GoogleSignInButton";
 
 export default function SignUp() {
     const router = useRouter();
@@ -41,12 +42,7 @@ export default function SignUp() {
                 <TouchableOpacity style={styles.button} onPress={handleSignUp} disabled={loading}>
                     <Text style={styles.buttonText}>{loading ? "Loading..." : "Sign up"}</Text>
                 </TouchableOpacity>
-                <TouchableOpacity
-                    style={[styles.button, styles.googleButton]}
-                    onPress={() => supabase.auth.signInWithOAuth({ provider: "google" })}
-                >
-                    <Text style={styles.buttonText}>Zaloguj się przez Google</Text>
-                </TouchableOpacity>
+                <GoogleSignInButton />
 
                 <Text>
                     Do you already have an account?{" "}
