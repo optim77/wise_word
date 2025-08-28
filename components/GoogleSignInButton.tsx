@@ -1,15 +1,22 @@
 import { supabase } from "@/hooks/supabaseClient";
 import * as WebBrowser from "expo-web-browser";
 import * as Google from "expo-auth-session/providers/google";
-import { Button, Text, View, Image, TouchableOpacity, StyleSheet } from "react-native";
+import * as AuthSession from "expo-auth-session";
+import { Text, View, Image, TouchableOpacity, StyleSheet } from "react-native";
 import { useEffect } from "react";
 
 WebBrowser.maybeCompleteAuthSession();
 
 export default function GoogleSignInButton() {
+    // redirect przez proxy Expo
+    const redirectUri = AuthSession.makeRedirectUri({ useProxy: true });
+
     const [request, response, promptAsync] = Google.useAuthRequest({
         clientId: "",
+        iosClientId: "",
         androidClientId: "",
+        webClientId: "",
+        redirectUri, // <--- kluczowe
     });
 
     useEffect(() => {
@@ -28,13 +35,15 @@ export default function GoogleSignInButton() {
         <TouchableOpacity
             style={styles.button}
             disabled={!request}
-            onPress={() => promptAsync()}
+            onPress={() => promptAsync({ useProxy: true })}
         >
             <Image
-                source={{ uri: "https://upload.wikimedia.org/wikipedia/commons/5/53/Google_%22G%22_Logo.svg" }}
+                source={{
+                    uri: "https://upload.wikimedia.org/wikipedia/commons/5/53/Google_%22G%22_Logo.svg",
+                }}
                 style={styles.logo}
             />
-            <Text style={styles.text}>Sign in with Google</Text>
+            <Text style={styles.text}>Zaloguj się przez Google</Text>
         </TouchableOpacity>
     );
 }
