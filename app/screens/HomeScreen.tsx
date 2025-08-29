@@ -8,14 +8,9 @@ import {
     RefreshControl,
 } from "react-native";
 import { supabase } from "@/hooks/supabaseClient";
+import { Word } from "@/components/types/Word";
+import { WordBar } from "@/components/WordBar";
 
-
-type Word = {
-    id: number;
-    created_at: string;
-    word: string;
-    meaning: string;
-};
 
 export default function HomeScreen() {
     const [word, setWord] = useState<Word | null>(null);
@@ -64,10 +59,7 @@ export default function HomeScreen() {
             }
         >
             {word ? (
-                <View style={styles.card}>
-                    <Text style={styles.word}>{word.word}</Text>
-                    <Text style={styles.meaning}>{word.meaning}</Text>
-                </View>
+                <WordBar id={word.id} word={word.word} meaning={word.meaning} created_at={word.created_at} />
             ) : (
                 <Text>Brak słowa na dziś</Text>
             )}
@@ -82,29 +74,6 @@ const styles = StyleSheet.create({
         alignItems: "center",
         padding: 20,
         backgroundColor: "#f5f5f5",
-    },
-    card: {
-        width: "100%",
-        backgroundColor: "white",
-        padding: 24,
-        borderRadius: 16,
-        shadowColor: "#000",
-        shadowOpacity: 0.1,
-        shadowRadius: 8,
-        elevation: 4,
-    },
-    word: {
-        fontSize: 28,
-        fontWeight: "bold",
-        marginBottom: 12,
-        color: "#333",
-        textAlign: "center",
-        textTransform: "capitalize"
-    },
-    meaning: {
-        fontSize: 18,
-        color: "#555",
-        textAlign: "center",
     },
     center: {
         flex: 1,

@@ -38,6 +38,12 @@
       "favicon": "./assets/images/favicon.png"
     },
     "plugins": [
+      [
+        "@react-native-google-signin/google-signin",
+        {
+          "iosUrlScheme": "com.googleusercontent.apps.7xxxxxxx"
+        }
+      ],
       "expo-router",
       [
         "expo-splash-screen",
@@ -52,6 +58,12 @@
     ],
     "experiments": {
       "typedRoutes": true
+    },
+    "extra": {
+      "router": {},
+      "eas": {
+        "projectId": "85894215-7173-49d3-8658-db63c704b5e8"
+      }
     }
   }
 }
